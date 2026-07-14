@@ -63,51 +63,28 @@
 ## 📁 Repository Structure
 
 ```
-ATLYS analysis and dashboard/
+ATLYS-Visa-Application-Analytics-Transformation-Case-study/
 │
-├── README.md                           # This file
-├── Business_Analysis_Case_Study.md    # Comprehensive case study (25 pages)
-├── DATA_DICTIONARY.md                  # Schema definitions & sample data
-├── .gitignore                          # Databricks-specific ignore rules
+├── README.md                                      # This file - project overview & setup
+├── Business_Analysis_Case_Study.md                # Comprehensive 25-page case study
+├── DATA_DICTIONARY.md                             # Schema definitions & sample data
 │
-├── notebooks/
-│   ├── bronze/
-│   │   ├── 01_ingest_applications.py  # Raw application ingestion
-│   │   ├── 02_ingest_payments.py      # Raw payment ingestion
-│   │   └── 03_ingest_user_events.py   # Behavioral event ingestion
-│   │
-│   ├── silver/
-│   │   ├── 01_clean_applications.py   # Deduplication & validation
-│   │   ├── 02_clean_payments.py       # Payment retry tracking
-│   │   └── 03_enrich_dimensions.py    # FK resolution
-│   │
-│   └── gold/
-│       ├── 01_gold_kpi_overview.py          # Global KPI aggregates
-│       ├── 02_gold_revenue_metrics.py       # Revenue by geo/payment
-│       ├── 03_gold_abandoned_cart.py        # Abandonment analysis
-│       └── 04_gold_operational_metrics.py   # Weekly ops snapshots
-│
-├── dashboards/
-│   ├── Executive_KPI_Overview.lvdash.json      # Executive summary
-│   ├── Revenue_and_Finance.lvdash.json         # Revenue analytics
-│   ├── User_Behavior_Abandonment.lvdash.json   # Customer funnel
-│   └── Operational_Health.lvdash.json          # SLA monitoring
-│
-├── metric_views/
-│   ├── revenue_metrics.yaml           # Revenue semantic layer
-│   ├── kpi_metrics.yaml               # Executive KPI metrics
-│   ├── abandonment_metrics.yaml       # Abandonment analysis
-│   └── operational_metrics.yaml       # Operations metrics
-│
-├── tests/
-│   ├── test_bronze_ingestion.py       # Bronze layer unit tests
-│   ├── test_silver_transformations.py # Silver layer validation
-│   └── test_gold_aggregations.py      # Gold layer business logic
-│
-└── workflows/
-    ├── daily_etl_pipeline.json        # Daily batch ETL job
-    └── hourly_incremental_load.json   # Hourly incremental updates
+├── Bronze Layer - Raw to Bronze.py                # Raw data ingestion layer
+├── Silver Layer - Data Preprocessing.py           # Data cleaning & transformation
+└── Gold Layer - Analytics Aggregations.py         # Business metrics & aggregations
 ```
+
+### File Descriptions
+
+**Documentation Files:**
+* `README.md` - Project overview, architecture, setup instructions, and strategic recommendations
+* `Business_Analysis_Case_Study.md` - Detailed case study with analysis, findings, and business impact
+* `DATA_DICTIONARY.md` - Complete schema definitions, column descriptions, and sample data
+
+**ETL Pipeline Files:**
+* `Bronze Layer - Raw to Bronze.py` - Ingests raw application, payment, and user event data into bronze tables
+* `Silver Layer - Data Preprocessing.py` - Cleanses data, handles deduplication, and enriches with dimension tables
+* `Gold Layer - Analytics Aggregations.py` - Generates business metrics, KPIs, and aggregated views for dashboards
 
 ---
 
@@ -125,8 +102,8 @@ ATLYS analysis and dashboard/
 ```bash
 # Using Databricks CLI
 databricks repos create \
-  --url https://github.com/your-username/atlys-analytics \
-  --path /Repos/rishigupta9711@gmail.com/atlys-analytics
+  --url https://github.com/Rishi-gupta-data/ATLYS-Visa-Application-Analytics-Transformation-Case-study \
+  --path /Repos/rishigupta9711@gmail.com/ATLYS-Visa-Application-Analytics-Transformation-Case-study
 
 # Or via Git integration in Databricks UI
 # Workspace → Repos → Add Repo → Enter repo URL
@@ -143,43 +120,28 @@ CREATE SCHEMA IF NOT EXISTS silver;
 CREATE SCHEMA IF NOT EXISTS gold;
 ```
 
-#### 3. Run Bronze Layer Ingestion
+#### 3. Run ETL Pipeline
 ```python
 # Execute notebooks in order:
-# notebooks/bronze/01_ingest_applications.py
-# notebooks/bronze/02_ingest_payments.py
-# notebooks/bronze/03_ingest_user_events.py
 
-# Or run via Databricks Workflows (see workflows/ folder)
+# Step 1: Bronze Layer - Ingest raw data
+# Run: Bronze Layer - Raw to Bronze.py
+# Creates: bronze_applications, bronze_payments, bronze_user_events tables
+
+# Step 2: Silver Layer - Clean and transform data
+# Run: Silver Layer - Data Preprocessing.py
+# Creates: silver_applications, silver_payments, silver_user_events tables
+
+# Step 3: Gold Layer - Generate business metrics
+# Run: Gold Layer - Analytics Aggregations.py
+# Creates: gold_kpi_overview, gold_revenue_metrics, gold_abandoned_cart, gold_operational_metrics tables
 ```
 
-#### 4. Run Silver Layer Transformations
-```python
-# Execute notebooks in order:
-# notebooks/silver/01_clean_applications.py
-# notebooks/silver/02_clean_payments.py
-# notebooks/silver/03_enrich_dimensions.py
-```
-
-#### 5. Run Gold Layer Aggregations
-```python
-# Execute notebooks in order:
-# notebooks/gold/01_gold_kpi_overview.py
-# notebooks/gold/02_gold_revenue_metrics.py
-# notebooks/gold/03_gold_abandoned_cart.py
-# notebooks/gold/04_gold_operational_metrics.py
-```
-
-#### 6. Deploy Metric Views
-```yaml
-# Import metric view YAML configs from metric_views/ folder
-# Via Databricks UI: Dashboard → Create Dataset → Metric View → Import YAML
-```
-
-#### 7. Import Dashboards
-```bash
-# Import dashboard JSON configs from dashboards/ folder
-# Via Databricks UI: Dashboard → Import → Upload JSON
+#### 4. Build Dashboards
+```sql
+-- Once gold tables are populated, create Lakeview dashboards in Databricks UI
+-- Connect to gold layer tables as data sources
+-- Refer to "Dashboard Overview" section below for dashboard specifications
 ```
 
 ---
@@ -360,7 +322,7 @@ pytest tests/ --cov=notebooks --cov-report=html
 | [README.md](README.md) | Project overview & setup | All users |
 | [Business_Analysis_Case_Study.md](Business_Analysis_Case_Study.md) | 25-page comprehensive case study | Executives, stakeholders |
 | [DATA_DICTIONARY.md](DATA_DICTIONARY.md) | Schema definitions & sample data | Developers, analysts |
-| [notebooks/](notebooks/) | Inline documentation in code | Engineers |
+| ETL Pipeline Files | Inline documentation in Python notebooks | Engineers |
 
 ---
 
